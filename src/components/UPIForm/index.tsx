@@ -2,12 +2,18 @@ import { useEffect, useState } from "react";
 import nupiIcon from "../../assets/nupi-icon.svg";
 import giftBoxIcon from "../../assets/gift-box.svg";
 import CashbackPopup from "../Popup";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 const UPIForm = () => {
+  const location = useLocation();
+  const { apiResponse } = location.state || {}; // Destructure the state
+  console.log(apiResponse);
+  const [payoutAmt, setPayoutAmount] = useState(Math.floor(Math.random() * 5 + 1));
   const [upiId, setUpiId] = useState("");
   const [isValidUpiId, setIsValidUpiId] = useState(false); // Validation state
   const [showPopup, setShowPopup] = useState(false);
+
+  useEffect(() => setPayoutAmount(Math.floor(Math.random() * 5) + 1), []);
 
   // Function to validate UPI ID
   const validateUpiId = (id: string) => {
@@ -35,8 +41,12 @@ const UPIForm = () => {
       <div className="flex items-center justify-center">
         <img src={giftBoxIcon} alt="NUPI Logo" width={200} height={200} />
       </div>
-      <h2 className="text-center text-[#464646] text-2xl font-medium">Congratulations!</h2>
-      <div className="w-2/5 mx-auto text-center text-[#1B6B82] text-xl font-semibold">You won Rs 500 Cashback</div>
+      <h2 className="text-center text-[#464646] text-2xl font-medium">
+        Congratulations!
+      </h2>
+      <div className="w-2/5 mx-auto text-center text-[#1B6B82] text-xl font-semibold">
+        You won Rs {payoutAmt} Cashback
+      </div>
       <div className="w-3/4 mx-auto text-center text-[#9C9C9C] text-sm font-normal">
         Lorem ipsum dolor sit amet consectetur. Id velit augue semper dignissim
         aliquet augue consequat amet

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import nupiIcon from "../../assets/nupi-icon.svg";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import axios from "axios";
 
 const OTPForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     code: "",
     phone: "",
@@ -20,18 +21,23 @@ const OTPForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
-      const response = await axios.post(
-      "http://localhost:8110/api/instant-cashback/verify-otp",
-      {
-        phoneNumber: formData.phone,
-        otp: formData.otp,
-        voucherCode: formData.code,
+      const { data } = await axios.post(
+        "http://localhost:8110/api/instant-cashback/verify-otp",
+        {
+          phoneNumber: formData.phone,
+          otp: formData.otp,
+          voucherCode: formData.code,
+        }
+      );
+      if (data.status === "success") {
+        navigate("/upi");
+      } else {
+        // Show error message
+        console.error("OTP verification failed:", data.message);
       }
-    );
-    console.log("api response:", response);
-  } catch (err) {
-    console.error("Error verifying OTP:", err);
-  }
+    } catch (err) {
+      console.error("Error verifying OTP:", err);
+    }
   };
 
   const handleGetOTP = async () => {
